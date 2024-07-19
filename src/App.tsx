@@ -15,9 +15,6 @@ function App() {
         <a href="https://ton.org/dev" target="_blank">
           <img src={twaLogo} className="logo" alt="TWA logo" />
         </a>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
