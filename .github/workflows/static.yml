@@ -1,5 +1,9 @@
 # Simple workflow for deploying static content to GitHub Pages
+<<<<<<< HEAD
 name: Deploy static content to Pages
+=======
+name: Deploy content to Pages
+>>>>>>> 48f8f01f2e8e911ab20cc070e8451ef98fe75bd2
 
 on:
   push:
