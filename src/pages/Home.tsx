@@ -33,9 +33,11 @@ const Home: React.FC = () => {
           <button className="bg-yellow-400 text-black font-bold py-2 px-8 rounded-full mt-4 w-full">Join</button>
         </div>
       </div>
-      <div className="mt-0">
+
+      {/* <div className="mt-0">
         <RegisterTime />
-      </div>
+      </div> */}
+
       <div className="w-full text-center text-gray-400 text-sm mb-20">@honey_bot</div>
 
       {/* Bottom Navigation */}
