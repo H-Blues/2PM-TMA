@@ -34,9 +34,9 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* <div className="mt-0">
+      <div className="mt-0">
         <RegisterTime />
-      </div> */}
+      </div>
 
       <div className="w-full text-center text-gray-400 text-sm mb-20">@honey_bot</div>
 
