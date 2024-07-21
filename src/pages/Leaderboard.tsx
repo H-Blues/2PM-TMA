@@ -5,7 +5,7 @@ import WebApp from "@twa-dev/sdk";
 
 const Leaderboard: React.FC = () => {
   return (
-    <div className="p-4 max-w-md mx-auto bg-white">
+    <div className="p-4 max-w-md mx-auto bg-white min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Telegram Wall of Fame</h1>
 
       <div className="bg-gray-100 rounded-lg p-3 mb-4 flex items-center justify-between">
@@ -26,7 +26,11 @@ const Leaderboard: React.FC = () => {
         Boost Score
       </button>
 
-      <p> {JSON.stringify(WebApp.initDataUnsafe.user)} </p>
+      <div className="w-full mt-6 px-4">
+        <p className="text-sm break-words whitespace-pre-wrap overflow-hidden">
+          {JSON.stringify(WebApp.initDataUnsafe.user, null, 2)}
+        </p>
+      </div>
 
       <div className="mb-4">
         <h2 className="font-bold mb-2">25.58M holders</h2>
