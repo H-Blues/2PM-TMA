@@ -1,18 +1,21 @@
 import React from "react";
 import { Star } from "lucide-react";
 import Nav from "../components/nav";
+import WebApp from "@twa-dev/sdk";
 
 const Leaderboard: React.FC = () => {
   return (
-    <div className="p-4 max-w-md mx-auto">
+    <div className="p-4 max-w-md mx-auto bg-white">
       <h1 className="text-2xl font-bold mb-4">Telegram Wall of Fame</h1>
 
       <div className="bg-gray-100 rounded-lg p-3 mb-4 flex items-center justify-between">
         <div className="flex items-center ">
-          <div className=" bg-gray-300 rounded-full w-10 h-10 mr-3"></div>
+          <div className=" bg-gray-300 rounded-full w-10 h-10 mr-3 overflow-hidden">
+            <img src={WebApp.initDataUnsafe.user?.photo_url} alt="User" className="rounded-full" />
+          </div>
           <div>
-            <div className="text-sm text-gray-600">2PM.NETWORK</div>
-            <div className="font-bold">838 HONEY</div>
+            <div className="text-sm text-gray-600">{WebApp.initDataUnsafe.user?.username}</div>
+            <div className="font-bold">838 Honey</div>
           </div>
         </div>
         <div className="text-yellow-500 font-bold">#264850</div>
@@ -22,6 +25,8 @@ const Leaderboard: React.FC = () => {
         <Star className="mr-2" size={20} />
         Boost Score
       </button>
+
+      <p> {JSON.stringify(WebApp.initDataUnsafe.user)} </p>
 
       <div className="mb-4">
         <h2 className="font-bold mb-2">25.58M holders</h2>
