@@ -2,6 +2,7 @@ import React from "react";
 import { Star } from "lucide-react";
 import Nav from "../components/nav";
 import WebApp from "@twa-dev/sdk";
+import { InitialsAvatar } from "@twa-dev/mark42";
 
 const Leaderboard: React.FC = () => {
   return (
@@ -11,10 +12,19 @@ const Leaderboard: React.FC = () => {
       <div className="bg-gray-100 rounded-lg p-3 mb-4 flex items-center justify-between">
         <div className="flex items-center ">
           <div className=" bg-gray-300 rounded-full w-10 h-10 mr-3 overflow-hidden">
-            <img src={WebApp.initDataUnsafe.user?.photo_url} alt="User" className="rounded-full" />
+            {WebApp.initDataUnsafe.user && (
+              <InitialsAvatar
+                entityId={WebApp.initDataUnsafe.user?.id}
+                entityName={WebApp.initDataUnsafe.user?.first_name}
+                theme="apple"
+                className="MyAvatar"
+              />
+            )}
           </div>
           <div>
-            <div className="text-sm text-gray-600">{WebApp.initDataUnsafe.user?.username}</div>
+            <div className="text-sm text-gray-600">
+              {WebApp.initDataUnsafe.user?.first_name + " " + WebApp.initDataUnsafe.user?.last_name}
+            </div>
             <div className="font-bold">838 Honey</div>
           </div>
         </div>
@@ -26,11 +36,11 @@ const Leaderboard: React.FC = () => {
         Boost Score
       </button>
 
-      <div className="w-full mt-6 px-4">
+      {/* <div className="w-full mt-6 px-4">
         <p className="text-sm break-words whitespace-pre-wrap overflow-hidden">
           {JSON.stringify(WebApp.initDataUnsafe.user, null, 2)}
         </p>
-      </div>
+      </div> */}
 
       <div className="mb-4">
         <h2 className="font-bold mb-2">25.58M holders</h2>
@@ -45,10 +55,10 @@ const Leaderboard: React.FC = () => {
             <div key={index} className="flex items-center justify-between mb-2 last:mb-0">
               <div className="flex items-center">
                 <div
-                  className={`bg-gray-300 rounded-full w-10 h-10 mr-3 ${
-                    index in [0, 1, 2] ? "border-2 border-purple-500" : ""
-                  }`}
-                ></div>
+                  className={`rounded-full w-11 h-11 mr-3 ${index in [0, 1, 2] ? "border-2 border-yellow-500" : ""}`}
+                >
+                  <InitialsAvatar entityId={index} entityName={user.name} theme="apple" className="MyAvatar" />
+                </div>
                 <div>
                   <div>{user.name}</div>
                   <div className="font-bold">{user.honey} HONEY</div>
