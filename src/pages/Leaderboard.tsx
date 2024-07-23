@@ -1,10 +1,17 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
+import { InitialsAvatar } from "@twa-dev/mark42";
 import Nav from "../components/nav";
 import WebApp from "@twa-dev/sdk";
-import { InitialsAvatar } from "@twa-dev/mark42";
 
 const Leaderboard: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleBoostScore = () => {
+    navigate("/quest");
+  };
+
   return (
     <div className="p-4 max-w-md mx-auto bg-white min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Telegram Wall of Fame</h1>
@@ -31,7 +38,10 @@ const Leaderboard: React.FC = () => {
         <div className="text-yellow-500 font-bold">#264850</div>
       </div>
 
-      <button className="bg-yellow-500 text-white w-full py-2 rounded-lg flex items-center justify-center mb-4">
+      <button
+        className="bg-yellow-500 text-white w-full py-2 rounded-lg flex items-center justify-center mb-4"
+        onClick={handleBoostScore}
+      >
         <Star className="mr-2" size={20} />
         Boost Score
       </button>
