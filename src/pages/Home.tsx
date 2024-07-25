@@ -7,11 +7,11 @@ import HexagonRow from "../components/hexagonRow";
 import WebApp from "@twa-dev/sdk";
 
 const Home: React.FC = () => {
-  const [msg, setMsg] = useState("Hi");
+  const [msg, setMsg] = useState("");
 
   const join = () => {
     setMsg(JSON.stringify(WebApp.initDataUnsafe.user?.id));
-    WebApp.sendData(JSON.stringify(WebApp.initDataUnsafe.user?.id));
+    WebApp.sendData(JSON.stringify({ id: WebApp.initDataUnsafe.user?.id }));
   };
 
   return (
