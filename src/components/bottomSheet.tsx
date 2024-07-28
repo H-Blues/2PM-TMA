@@ -11,7 +11,7 @@ interface BottomSheetProps {
 const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onClose, inviteLink }) => {
   const [isCopied, setIsCopied] = useState(false);
   const utils = initUtils();
-  const share_url = `https://t.me/share/url?url=https://t.me/datahoney_bot/startapp=123456`;
+  const share_url = `https://t.me/share/url?url=${inviteLink}`;
 
   if (!isOpen) return null;
 

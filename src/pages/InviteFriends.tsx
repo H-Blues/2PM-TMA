@@ -1,10 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Nav from "../components/nav";
 import honeyLogo from "../assets/honey.svg";
 import BottomSheet from "../components/bottomSheet";
+import { API_URLS } from "../config/apiConfig";
+import WebApp from "@twa-dev/sdk";
 
 const InviteFriends: React.FC = () => {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [inviteCode, setInviteCode] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchInviteCode = async () => {
+      try {
+        const telegramId = WebApp.initDataUnsafe.user?.id;
+
+        const userResponse = await fetch(`${API_URLS.GET_USER}/${telegramId}`);
+        if (!userResponse.ok) {
+          throw new Error("Failed to fetch user");
+        }
+        const userData = await userResponse.json();
+
+        const inviteResponse = await fetch(`${API_URLS.GET_INVITE_CODE}/${userData.user_id}`);
+        if (!inviteResponse.ok) {
+          throw new Error("Failed to fetch invite code");
+        }
+        const inviteData = await inviteResponse.json();
+
+        setInviteCode(inviteData.invite_code);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchInviteCode();
+  }, []);
 
   const handleInviteClick = () => {
     setIsBottomSheetOpen(true);
@@ -13,6 +46,14 @@ const InviteFriends: React.FC = () => {
   const handleCloseBottomSheet = () => {
     setIsBottomSheetOpen(false);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white p-4">
@@ -31,10 +72,16 @@ const InviteFriends: React.FC = () => {
         Invite friends
       </button>
 
+      {inviteCode && (
+        <p className="mt-4 text-center">
+          Your invite code: <strong>{inviteCode}</strong>
+        </p>
+      )}
+
       <BottomSheet
         isOpen={isBottomSheetOpen}
         onClose={handleCloseBottomSheet}
-        inviteLink="https://t.me/datahoney_bot"
+        inviteLink={`https://t.me/datahoney_bot/join?startapp=${inviteCode}`}
       />
 
       <Nav />

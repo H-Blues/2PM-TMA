@@ -1,17 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Nav from "../components/nav";
 import honeyLogo from "../assets/honey.svg";
 import HexagonRow from "../components/hexagonRow";
-// import RegisterTime from "../components/registerTime";
+import { API_URLS } from "../config/apiConfig";
 
 import WebApp from "@twa-dev/sdk";
 
 const Home: React.FC = () => {
-  const [msg, setMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [startParam, setStartParam] = useState<string | "">("");
+  const [response, setResponse] = useState<string | null>(null);
 
-  const join = () => {
-    setMsg(JSON.stringify(WebApp.initDataUnsafe.user?.id));
-    WebApp.sendData(JSON.stringify({ id: WebApp.initDataUnsafe.user?.id }));
+  useEffect(() => {
+    const start_param = WebApp.initDataUnsafe.start_param;
+    // const searchParams = new URLSearchParams(initData);
+    // const startParameter = searchParams.get("start_param");
+    if (start_param) {
+      setStartParam(start_param);
+      console.log("Invite code:", start_param);
+    }
+  }, []);
+
+  const join = async () => {
+    setIsLoading(true);
+
+    const user = WebApp.initDataUnsafe.user;
+    if (!user || !user.id) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URLS.CREATE_USER, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          telegram_id: user.id.toString(),
+          username: user.username,
+          invite_code: startParam,
+        }),
+      });
+
+      if (response.status === 201 || response.status === 200) {
+        setResponse("User created successfully");
+      }
+
+      if (response.status === 400 || response.status === 409) {
+        setResponse("Joined");
+      }
+
+      const data = await response.json();
+      WebApp.sendData(JSON.stringify({ action: "user_created", user_id: data.user_id }));
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -36,16 +82,19 @@ const Home: React.FC = () => {
         <div className="bg-gray-100 rounded-lg p-4 w-full max-w-sm mx-auto text-center">
           <h2 className="text-xl font-bold">HONEY COMMUNITY</h2>
           <p className="text-yellow-500 mt-4">Home for telegram OGs</p>
-          <p className="text-black">{msg}</p>
-          <button className="bg-yellow-400 text-black font-bold py-2 px-8 rounded-full mt-4 w-full" onClick={join}>
-            Join
+          {/* <p>Start Param: {startParam}</p> */}
+          <p> {response}</p>
+          <button
+            className={`bg-yellow-400 text-black font-bold py-2 px-8 rounded-full mt-4 w-full ${
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            onClick={join}
+            disabled={isLoading}
+          >
+            {isLoading ? "Joining..." : "Join"}
           </button>
         </div>
       </div>
-
-      {/* <div className="mt-0">
-        <RegisterTime />
-      </div> */}
 
       {/* Bottom Navigation */}
       <Nav />
