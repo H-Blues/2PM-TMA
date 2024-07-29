@@ -52,4 +52,14 @@ export const getAge = (id: number): [string, string] => {
   ];
 };
 
+export const getCreationYear = (id: number | undefined): number => {
+  if (id) {
+    const d = getDate(id);
+    const year = d[1].getUTCFullYear();
+    return d[0] < 0 ? year - 1 : d[0] > 0 ? year + 1 : year;
+  } else {
+    return -1;
+  }
+};
+
 export default getAge;

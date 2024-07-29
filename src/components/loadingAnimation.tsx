@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import CollectingHoney from "../assets/collecting-honey.gif";
 
 interface LoadingAnimationProps {
-  setShowAnimation: (show: boolean) => void;
+  onComplete: () => void;
 }
 
-const LoadingAnimation: React.FC<LoadingAnimationProps> = ({ setShowAnimation }) => {
+const LoadingAnimation: React.FC<LoadingAnimationProps> = ({ onComplete }) => {
   const [progress1, setProgress1] = useState(0);
   const [progress2, setProgress2] = useState(0);
   const [progress3, setProgress3] = useState(0);
@@ -31,7 +31,7 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({ setShowAnimation })
 
     const closeTimer = setTimeout(() => {
       if (progress1 === 100 && progress2 === 100 && progress3 === 100) {
-        setShowAnimation(false);
+        onComplete();
       }
     }, 6000);
 
@@ -41,7 +41,7 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({ setShowAnimation })
       clearTimeout(timer3);
       clearTimeout(closeTimer);
     };
-  }, [[progress1, progress2, progress3, setShowAnimation]]);
+  }, [[progress1, progress2, progress3, onComplete]]);
 
   const ProgressBar = ({ progress, text }: { progress: number; text: string }) => (
     <div className="w-full max-w-sm mb-4">

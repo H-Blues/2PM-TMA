@@ -4,6 +4,7 @@ import honeyLogo from "../assets/honey.svg";
 import BottomSheet from "../components/bottomSheet";
 import { API_URLS } from "../config/apiConfig";
 import WebApp from "@twa-dev/sdk";
+import ErrorPage from "./ErrorPage";
 
 const InviteFriends: React.FC = () => {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
@@ -52,7 +53,7 @@ const InviteFriends: React.FC = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <ErrorPage />;
   }
 
   return (
