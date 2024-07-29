@@ -11,37 +11,32 @@ const LoadingAnimation: React.FC<LoadingAnimationProps> = ({ onComplete }) => {
   const [progress3, setProgress3] = useState(0);
 
   useEffect(() => {
-    const timer1 = setInterval(() => {
-      setProgress1((prev) => (prev >= 100 ? 100 : prev + 2));
-    }, 40);
+    let timer: NodeJS.Timeout;
+    let currentProgress = 1;
 
-    const timer2 = setTimeout(() => {
-      const interval = setInterval(() => {
-        setProgress2((prev) => (prev >= 100 ? 100 : prev + 2));
-      }, 40);
-      return () => clearInterval(interval);
-    }, 2000);
+    const updateProgress = () => {
+      if (currentProgress <= 100) {
+        setProgress1(() => Math.min(currentProgress, 100));
+      }
+      if (currentProgress > 100 && currentProgress <= 200) {
+        setProgress2(() => Math.min(currentProgress - 100, 100));
+      }
+      if (currentProgress > 200 && currentProgress <= 300) {
+        setProgress3(() => Math.min(currentProgress - 200, 100));
+      }
 
-    const timer3 = setTimeout(() => {
-      const interval = setInterval(() => {
-        setProgress3((prev) => (prev >= 100 ? 100 : prev + 2));
-      }, 40);
-      return () => clearInterval(interval);
-    }, 4000);
+      currentProgress++;
 
-    const closeTimer = setTimeout(() => {
-      if (progress1 === 100 && progress2 === 100 && progress3 === 100) {
+      if (currentProgress > 300) {
+        clearInterval(timer);
         onComplete();
       }
-    }, 6000);
-
-    return () => {
-      clearInterval(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-      clearTimeout(closeTimer);
     };
-  }, [[progress1, progress2, progress3, onComplete]]);
+
+    timer = setInterval(updateProgress, 30);
+
+    return () => clearInterval(timer);
+  }, [onComplete]);
 
   const ProgressBar = ({ progress, text }: { progress: number; text: string }) => (
     <div className="w-full max-w-sm mb-4">

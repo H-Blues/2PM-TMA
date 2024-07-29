@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Nav from "../components/nav";
 import honeyLogo from "../assets/honey.svg";
 import BottomSheet from "../components/bottomSheet";
@@ -10,43 +10,33 @@ const InviteFriends: React.FC = () => {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [inviteCode, setInviteCode] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  const telegramId = WebApp.initDataUnsafe.user?.id;
-
-  const fetchInviteCode = useCallback(async () => {
-    if (inviteCode) return;
-
-    try {
-      const storedInviteCode = localStorage.getItem(`${telegramId}_inviteCode`);
-      if (storedInviteCode) {
-        setInviteCode(storedInviteCode);
-        return;
-      }
-
-      const userResponse = await fetch(`${API_URLS.GET_USER}/${telegramId}`);
-      if (!userResponse.ok) {
-        throw new Error("Failed to fetch user");
-      }
-      const userData = await userResponse.json();
-
-      const inviteResponse = await fetch(`${API_URLS.GET_INVITE_CODE}/${userData.user_id}`);
-      if (!inviteResponse.ok) {
-        throw new Error("Failed to fetch invite code");
-      }
-      const inviteData = await inviteResponse.json();
-
-      setInviteCode(inviteData.invite_code);
-      localStorage.setItem(`${telegramId}_inviteCode`, inviteData.invite_code);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    }
-  }, [inviteCode]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedInviteCode = localStorage.getItem(`${telegramId}_inviteCode`);
-    if (storedInviteCode) {
-      setInviteCode(storedInviteCode);
-    }
+    const fetchInviteCode = async () => {
+      try {
+        const telegramId = WebApp.initDataUnsafe.user?.id;
+
+        const userResponse = await fetch(`${API_URLS.GET_USER}/${telegramId}`);
+        if (!userResponse.ok) {
+          throw new Error("Failed to fetch user");
+        }
+        const userData = await userResponse.json();
+
+        const inviteResponse = await fetch(`${API_URLS.GET_INVITE_CODE}/${userData.user_id}`);
+        if (!inviteResponse.ok) {
+          throw new Error("Failed to fetch invite code");
+        }
+        const inviteData = await inviteResponse.json();
+
+        setInviteCode(inviteData.invite_code);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchInviteCode();
   }, []);
 
@@ -57,6 +47,10 @@ const InviteFriends: React.FC = () => {
   const handleCloseBottomSheet = () => {
     setIsBottomSheetOpen(false);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   if (error) {
     return <ErrorPage />;

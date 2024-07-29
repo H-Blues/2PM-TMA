@@ -22,13 +22,8 @@ const Home: React.FC = () => {
   const telegramData = WebApp.initDataUnsafe;
 
   useEffect(() => {
-    const storedScore = localStorage.getItem(`${telegramData.user?.id}_userScore`);
-    if (storedScore) {
-      setScore(Number(storedScore));
-    } else {
-      getUserScore(telegramData.user?.id);
-      setShowCounter(true);
-    }
+    getUserScore(telegramData.user?.id);
+    setShowCounter(true);
 
     // const creationYear = getCreationYear(telegramData.user?.id);
     // const isPremium = telegramData.user?.is_premium ? true : false;
@@ -40,8 +35,6 @@ const Home: React.FC = () => {
 
   const getUserScore = useCallback(
     async (id: any) => {
-      const telegramData = WebApp.initDataUnsafe;
-
       const response = await fetch(`${API_URLS.GET_USER}/${id}`, {
         method: "GET",
         headers: {
@@ -52,10 +45,9 @@ const Home: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         setScore(data.points);
-        localStorage.setItem(`${telegramData.user?.id}_userScore`, data.points.toString());
       }
     },
-    [telegramData, score]
+    [telegramData]
   );
 
   const join = useCallback(async () => {
@@ -82,13 +74,13 @@ const Home: React.FC = () => {
         }),
       });
 
-      if (response.status === 201 || response.status === 200) {
+      if (response.status === 201 || response.status === 200 || response.status === 400) {
         setShowAnimation(true);
         setResponse("Welcome!");
         getUserScore(telegramData.user?.id);
       }
 
-      if (response.status === 400 || response.status === 409) {
+      if (response.status === 409) {
         setResponse("Welcome!");
         getUserScore(telegramData.user?.id);
       }
@@ -124,7 +116,7 @@ const Home: React.FC = () => {
           <img src={honeyLogo} alt="Honey Pot" className="w-48 h-48 mb-1" />
 
           <h1 className="text-4xl font-bold mb-4">
-            {showCounter ? <CounterAnimation end={score} duration={2000} /> : score} {" HONEY"}
+            {showCounter ? <CounterAnimation end={score} duration={300} /> : score} {" HONEY"}
           </h1>
 
           <div className="bg-gray-100 rounded-lg p-4 w-full max-w-sm mx-auto text-center">
