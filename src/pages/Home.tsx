@@ -14,17 +14,21 @@ const Home: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<string | null>("Join");
   const [score, setScore] = useState<number>(0);
-  const [telegramData, setTelegramData] = useState<any>(null);
   const [showAnimation, setShowAnimation] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [showCounter, setShowCounter] = useState(false);
 
   const MemoizedHexagonRow = useMemo(() => <HexagonRow />, []);
+  const telegramData = WebApp.initDataUnsafe;
 
   useEffect(() => {
-    const telegramData = WebApp.initDataUnsafe;
-    setTelegramData(telegramData);
-    getUserScore(telegramData.user?.id);
+    const storedScore = localStorage.getItem(`${telegramData.user?.id}_userScore`);
+    if (storedScore) {
+      setScore(Number(storedScore));
+    } else {
+      getUserScore(telegramData.user?.id);
+      setShowCounter(true);
+    }
 
     // const creationYear = getCreationYear(telegramData.user?.id);
     // const isPremium = telegramData.user?.is_premium ? true : false;
@@ -32,23 +36,27 @@ const Home: React.FC = () => {
     // console.log("Creation:", creationYear);
     // console.log("Premium:", isPremium);
     // console.log("Invite code:", telegramData.start_param);
-  }, []);
+  }, [telegramData]);
 
-  useEffect(() => setShowCounter(true), [score]);
+  const getUserScore = useCallback(
+    async (id: any) => {
+      const telegramData = WebApp.initDataUnsafe;
 
-  const getUserScore = useCallback(async (id: any) => {
-    const response = await fetch(`${API_URLS.GET_USER}/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+      const response = await fetch(`${API_URLS.GET_USER}/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (response.ok) {
-      const data = await response.json();
-      setScore(data.points);
-    }
-  }, []);
+      if (response.ok) {
+        const data = await response.json();
+        setScore(data.points);
+        localStorage.setItem(`${telegramData.user?.id}_userScore`, data.points.toString());
+      }
+    },
+    [telegramData, score]
+  );
 
   const join = useCallback(async () => {
     setIsLoading(true);
