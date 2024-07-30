@@ -1,11 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
 import { InitialsAvatar } from "@twa-dev/mark42";
+import { API_URLS } from "../config/apiConfig";
 import Nav from "../components/nav";
 import WebApp from "@twa-dev/sdk";
 
 const Leaderboard: React.FC = () => {
+  const [score, setScore] = useState<number>(0);
+
+  const getUserScore = async (id: any) => {
+    const response = await fetch(`${API_URLS.GET_USER}/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setScore(data.points);
+    }
+  };
+
+  useEffect(() => {
+    getUserScore(WebApp.initDataUnsafe.user?.id);
+  });
+
   const navigate = useNavigate();
 
   const handleBoostScore = () => {
@@ -32,7 +53,7 @@ const Leaderboard: React.FC = () => {
             <div className="text-sm text-gray-600">
               {WebApp.initDataUnsafe.user?.first_name + " " + WebApp.initDataUnsafe.user?.last_name}
             </div>
-            <div className="font-bold">838 Honey</div>
+            <div className="font-bold">{score} Honey</div>
           </div>
         </div>
         <div className="text-yellow-500 font-bold">#264850</div>

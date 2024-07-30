@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import CollectingHoney from "../assets/collecting-honey.gif";
+import CollectingHoney from "../../assets/collecting-honey.gif";
 
 interface LoadingAnimationProps {
   onComplete: () => void;

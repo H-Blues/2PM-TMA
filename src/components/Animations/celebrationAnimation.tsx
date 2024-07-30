@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
-import ScoreModal from "./scoreModal";
+import ScoreModal from "../scoreModal";
 
 interface CelebrationAnimationProps {
   onComplete: () => void;

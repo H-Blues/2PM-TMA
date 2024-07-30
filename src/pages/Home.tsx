@@ -2,10 +2,10 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Nav from "../components/nav";
 import honeyLogo from "../assets/honey.svg";
 import HexagonRow from "../components/hexagonRow";
-import LoadingAnimation from "../components/loadingAnimation";
-import CelebrationAnimation from "../components/celebrationAnimation";
-import CounterAnimation from "../components/counterAnimation";
-import { getCreationYear } from "../components/idage";
+import LoadingAnimation from "../components/Animations/loadingAnimation";
+import CelebrationAnimation from "../components/Animations/celebrationAnimation";
+import CounterAnimation from "../components/Animations/counterAnimation";
+import { getCreationYear } from "../components/TgCreationTime/idage";
 import { API_URLS } from "../config/apiConfig";
 
 import WebApp from "@twa-dev/sdk";

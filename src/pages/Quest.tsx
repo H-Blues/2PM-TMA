@@ -1,12 +1,12 @@
-// Quest.tsx
 import React, { useState } from "react";
-import QuestList from "../components/questList";
-import QuestDetail from "../components/questDetail";
+import QuestList from "../components/DataQuest/questList";
+import QuestDetail from "../components/DataQuest/questDetail";
 import Nav from "../components/nav";
 
 interface QuestType {
   name: string;
   honey: number;
+  pic: string;
 }
 
 const Quest: React.FC = () => {
